@@ -1,11 +1,32 @@
 ---
 title: "Final Grade Reflection"
-author: "Your Name Goes Here"
+author: "Austin Liu"
 format: pdf
 editor: visual
 ---
 
-In this document, you make a data-based argument for the grade you've earned in this course. Your argument should include evidence from the supporting artifacts you've provided. 
+# Midterm Reflection
 
-The output document should be a PDF or a Word Document, as it should be a **maximum** of 2-pages. 
----
+I think I have earned an A in the course. I have demonstrated understanding of nearly all of the learning targets. Since Week 3, I have been more active in group discussion, communication, and classroom participation. I have also done a few reflections and revisions to revise my thinking. I also have completed all of the challenges in order to extend my thinking. I need to be better about providing timely feedback on peer code review, otherwise I have met all laid out expectations.
+I show up to every class and take notes when Professor Theobold is lecturing, I complete the preview activities including the readings, tutorials, and lecture videos prior to coming to class on Tuesdays. I complete the practice activities in class or before Wednesday. I
+completed the labs and challenges before Sunday. I look through comments given by peers and keep their comments in mind.
+
+I have also begun the process of revising questions even when attaining an S.
+As a team member, we are starting to click better as a group. have progressed in the sense that I am more comfortable voicing my opinions, without fear of being
+incorrect. I also feel comfortable in my group asking questions without fear ofjudgement from my group members for not knowing how to do something. In ourgroup of three, we all work individually and then consult each other when we have questions.
+
+
+
+
+
+# Working with Data
+
+I display understanding of importing data from various formats (WD-1) in Challenge 4. I show understanding for selecting necessary columns in Lab 3 Question 7 (WD-2). I showed ability to filter rows from a dataframe for a variety of databases (WD-3) in the last part of Lab 3. I achieved the learning target of modifying existing variables in Practice Activity 3 (WD-4). I demonstrated ability for mutating joins in Preview Activity 10 (WD-5). I achieved filtering joins in Lab 4 Question 2 (WD-6).
+
+# Reproducibility
+
+# Data Visualization and Summarization
+
+# Program Efficiency
+
+I display understanding of writing concise and non-repetitive code in Lab 4 Question 3 with the filter step. In that same question, I use iteration over all columns to reduce repetition in my code. An example of utilizing modern tools is using pivot_longer() instead of gather() in Preview Activity 10.
