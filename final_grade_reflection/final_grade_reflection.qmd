@@ -7,7 +7,7 @@ editor: visual
 
 # Midterm Reflection
 
-I think I have earned an A in the course. I have demonstrated understanding of nearly all of the learning targets. Since Week 3, I have been more active in group discussion, communication, and classroom participation. I have also done a few reflections and revisions to revise my thinking. I also have completed all of the challenges in order to extend my thinking. I need to be better about providing timely feedback on peer code review, otherwise I have met all laid out expectations.
+I think I have earned an A in the course. I have demonstrated understanding of all of the learning targets from Weeks 1-5. Since Week 3, I have been more active in group discussion, communication, and classroom participation. I have also done a few reflections and revisions to revise my thinking. I also have completed all of the challenges in order to extend my thinking. I need to be better about providing timely feedback on peer code review, otherwise I have met all laid out expectations.
 I show up to every class and take notes when Professor Theobold is lecturing, I complete the preview activities including the readings, tutorials, and lecture videos prior to coming to class on Tuesdays. I complete the practice activities in class or before Wednesday. I
 completed the labs and challenges before Sunday. I look through comments given by peers and keep their comments in mind.
 
@@ -15,17 +15,17 @@ I have also begun the process of revising questions even when attaining an S.
 As a team member, we are starting to click better as a group. have progressed in the sense that I am more comfortable voicing my opinions, without fear of being
 incorrect. I also feel comfortable in my group asking questions without fear ofjudgement from my group members for not knowing how to do something. In ourgroup of three, we all work individually and then consult each other when we have questions.
 
-
-
-
-
 # Working with Data
 
 I display understanding of importing data from various formats (WD-1) in Challenge 4. I show understanding for selecting necessary columns in Lab 3 Question 7 (WD-2). I showed ability to filter rows from a dataframe for a variety of databases (WD-3) in the last part of Lab 3. I achieved the learning target of modifying existing variables in Practice Activity 3 (WD-4). I demonstrated ability for mutating joins in Preview Activity 10 (WD-5). I achieved filtering joins in Lab 4 Question 2 (WD-6).
 
 # Reproducibility
 
+I demonstrate proficiency in creating a reproducible analysis (R-1) in Lab 3 and 4. I demonstrate the ability to write documented and tidy code in Lab 4 (R-2). I show that I am able to write robust programs resistant to change in Lab 5. In Lab 5 I created objects for each part to maintain the original data set.
+
 # Data Visualization and Summarization
+
+In Lab 2 and 3 I ceate visualizations for a variety of variable types (DVS-1). In Lab 3 I used plot modifications to make my visualization clear for the reader (DVS-2). In Lab 3, I show creativity by creating my own visualizations with my personal spin of color, transparency, and fill color (DVS-3). In Lab 3 Question 7 I use summary to calculate numerical summaries of variables (DVS-4). In Lab 4, I find summaries across columns fot multiple groups.
 
 # Program Efficiency
 
