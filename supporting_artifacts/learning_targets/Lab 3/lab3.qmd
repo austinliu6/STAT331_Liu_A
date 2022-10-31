@@ -1,0 +1,151 @@
+---
+title: "Lab 3"
+author: "Austin Liu"
+format: html
+editor: visual
+messages: false
+---
+
+```{r}
+#| message: false
+library(here)
+library(tidyverse)
+```
+
+```{r}
+#| message: false
+hiphops <- read_csv(here("supporting_artifacts", "learning_targets", 
+                         "Lab 3", "hiphop.csv"))
+```
+
+# Question 1
+
+Summary: This data set has the findings from a study done at the University of Minnesota. The study was done with the goal of predicting musical taste based on the familiarity with African American English. African American English is a dialect of English spoken predominantly by African-american individuals. Participants in the study responded on a scale of 1 to 5 in terms of familiarity with the vocabulary. The data also contains information about the subject's sex, age, ethnicity, geographic populations of their hometown/county, their preferences for different types of music, and the ethnicity of the people they spend time with. 168 participants were selected from linguistics, sociology, and music classes from University of Minnesota .
+
+# Question 2
+
+```{r}
+dim(hiphops)
+```
+
+Each row corresponds to individual people's responses to freely define AAE vocabulary. 168 participants multiplied by 64 terms gives us 10,752 rows in the data set.
+
+# Question 3
+
+Missing values in the "move" variables and "weekly" were replaced with mean values within each of those variables. Missing values were also replaced with NA and 0.
+
+A benefit of this method is that we could still perform calculations without the need to account for and drop too many observations for missing values. This would also be better than replacing numerical values with 0 which would skew results. A drawback is that the mean for missing values may not help us accurately capture the true results. 0 in some variables would cause incorrect conclusions being drawn from the data.
+
+# Question 4: Clean the dataset
+
+```{r}
+cleaned <- hiphops |>
+  mutate(across(where(is.character), as.factor) ) |> 
+  drop_na(numPreferredArtists, numOverallArtists)
+  
+  
+```
+
+# Question 5: Number of Unique Words
+
+```{r}
+numdist <- distinct(cleaned, word, .keep_all = TRUE)
+count(numdist)
+```
+
+After cleaning, there are 64 distinct AAE words in this data set.
+
+# Question 6: Creating a new variable that re-categorizes ethnic
+
+```{r}
+ethnic_cleaned <- cleaned |>
+  mutate(ethnic = (if_else (ethnic == "white", "white", "non-white")))
+```
+
+# Question 7
+
+```{r}
+demographic_cleaned <- ethnic_cleaned |>
+  distinct(subj, .keep_all = TRUE) |> 
+  select(sex, age, ethnic)
+
+summary(demographic_cleaned)
+count(demographic_cleaned, ethnic)
+```
+
+There are 56 females and 24 males. 62 participants are white and 18 are considered non-white. The average age of people in the study is 19.55 with the youngest at 16 and oldest at 42. Half of the people are 18 years old and under.
+
+# Question 8
+
+```{r}
+ggplot(data = demographic_cleaned, mapping = aes(y = sex , x = age )) + 
+  geom_boxplot(outlier.shape = NA) + 
+  geom_jitter(alpha = 0.5, color = "blue") +
+  labs(title = "Boxplot of Age by Gender Faceted by Ethnicity", 
+               x = "Age (Years)", 
+               y = "Gender") + 
+  facet_wrap(~ethnic)
+```
+
+```{r}
+ggplot(data = demographic_cleaned, aes(x = age)) + 
+         geom_histogram(color = "dark magenta", fill = "dark magenta", 
+                        binwidth = 1) +
+  labs(title = "Histogram of Subject's Ages", x = "Age", y = "Number of Subjects")
+
+
+```
+
+# Finding Most and Least Familiar Language
+
+```{r}
+familiar <- ethnic_cleaned |> 
+  filter(age < 20) |> 
+  group_by(word) |> 
+  summarise(mean_familiarity = mean(familiarity))
+
+slice_min(familiar, mean_familiarity, n = 1)
+
+slice_max(familiar, mean_familiarity, n = 1)
+```
+
+For people younger than 20, the least familiar phrase was "the Nation". The most familiar phrase was "feel me".
+
+```{r}
+familiar_women <- ethnic_cleaned |> 
+  filter(ethnic == "non-white", sex == "Female") |> 
+  group_by(word) |> 
+  summarise(mean_familiarity = mean(familiarity))
+
+slice_min(familiar_women, mean_familiarity, n = 1)
+
+slice_max(familiar_women, mean_familiarity, n = 1)
+```
+
+The most familiar phrase for non-white women is "what it do", while the least familiar phrases are "break someone out", "dollar cab", "domino", "dukey rope", "humming", "plex", "rollie", and "The Nation".
+
+```{r}
+familiar_men <- ethnic_cleaned |>
+  filter(ethnic == "white", sex == "Male", age > 30) |>
+  group_by(word) |>
+  summarize(mean_familiarity = mean(familiarity))
+
+slice_min(familiar_men, mean_familiarity, n = 1)
+
+slice_max(familiar_men, mean_familiarity, n = 1)
+```
+
+The least familiar phrases for white men over 30 are "\[to be\] ghost", "A-town", "ashy", "ay yo trip", "ballin'", "beezy", "bones", "boo", "boughie", "break someone out", and the most familiar words are "5-0", "hard", and "make it rain".
+
+# Study Subjects
+
+```{r}
+justin_bieber <- ethnic_cleaned |>
+  filter(ethnic == "white", sex == "Male", 
+         city >= 10000 & city <= 60000, 
+         age >= 17 & age <= 23) |>
+  slice_max(bieber,
+            n = 1)
+```
+
+Person 17 is most likely to be Justin Bieber. Based on the criteria given, along with the highest value of the "bieber" variable which shows how well someone knows Justin Bieber's music, I think it is Subject 17.

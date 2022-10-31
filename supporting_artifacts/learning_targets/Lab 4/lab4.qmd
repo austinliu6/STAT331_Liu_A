@@ -1,0 +1,155 @@
+---
+title: "Lab 4"
+author: "Austin Liu"
+format: html
+editor: visual
+---
+
+## Data Import and Packages
+
+```{r}
+#| message: false
+library(tidyverse)
+library(here)
+library(tidyr)
+
+avocado <- read_csv(here("supporting_artifacts", 
+                         "learning_targets", 
+                         "Lab 4", 
+                         "avocado.csv")) |> 
+  rename("SmallAvo" = `4046`,
+         "LargeAvo" = `4225`,
+         "XLargeAvo" = `4770`)
+```
+
+# Question 1
+
+This data set represents weekly retail data for Hass Avocados sold from 2015 to 2018. This data set includes the date, average price of a single avocado, the type of avocado, year, city or region, total volume of avocados sold, and total number of avocados sold by product look up number.
+
+# Question 2
+
+```{r}
+#| message: false
+#Question 2
+region <- data.frame(region = 
+              c("West",
+               "Northeast",
+               "SouthCentral",
+               "Southeast", 
+               "GreatLakes", 
+               "Plains",
+               "Midsouth",
+               "WestTexNewMexico"))
+
+regions <- semi_join(avocado, region)
+
+state <- data.frame(region = c("California", "NewYork", "SouthCarolina"))
+
+states <- semi_join(avocado, state)
+
+metro <- avocado |>
+  filter(region != "TotalUS") |> 
+  anti_join(regions) |> 
+  anti_join(states)
+```
+
+# Question 3
+
+```{r}
+#Question 3
+q3 <- regions |> 
+  group_by(region) |> 
+  filter(type == "organic", year == 2017) |> 
+  select(region, year, SmallAvo) |>
+  summarize(across(.cols = everything(), mean, na.rm = TRUE))
+q3
+slice_max(q3, order_by = SmallAvo)
+```
+
+The Westregion sold the most small, organic Hass avocados on average in 2017.
+
+# Question 4
+
+```{r}
+#Question 4
+q4 <- avocado |> 
+  separate(Date, into = c("Year", "Month", "Day")) |> 
+  group_by(Month) |> 
+  select(Month, `Total Volume`) |>
+  summarize(across(.cols = everything(), mean, na.rm = TRUE))
+q4
+slice_max(q4, order_by = `Total Volume`)
+```
+
+February was the month with the highest total average volume of avocado sales.
+
+# Question 5
+
+```{r}
+#Question 5
+top5 <- metro |> 
+  group_by(region) |> 
+  select(`Total Volume`, region) |> 
+  summarize(across(.cols = everything(), .fns = mean)) |> 
+  slice_max(order_by = `Total Volume`, n = 5)
+
+top5box <- metro |> 
+  semi_join(top5, by = "region")
+
+ggplot(data = top5box, mapping = aes(x = `Total Volume`, y = region)) + 
+  geom_boxplot()
+```
+
+# Question 6
+
+```{r}
+#| message: false
+#Question 6
+cali <- data.frame(region = c("Sacramento", "LosAngeles", "SanDiego", "SanFrancisco"))
+
+california <- semi_join(avocado, cali)
+
+differences <- california |> 
+  pivot_wider(names_from = region, values_from = AveragePrice) |>  
+  group_by(type) |> 
+  select(type, LosAngeles, SanFrancisco, 
+         Sacramento, SanDiego) |> 
+  summarize(across(.cols = everything(), .fns = mean, na.rm = TRUE)) |> 
+  pivot_longer("LosAngeles":"SanDiego", names_to = "Cali_Region", values_to = "Avg Price")
+
+differences
+```
+
+```{r}
+ggplot(data = differences, mapping = aes(x = `Avg Price`, y = Cali_Region, color = type)) + 
+  geom_point() +
+  labs(title = "Comparison of Avg Price of Avocados by type",
+       y = "Region of California", x = "Average Price ($)") +
+   annotate("text", y = 1, x = 1.1, label = "Conventional") +
+  annotate("text", y = 2, x = 1.1, label = "Conventional") +
+  annotate("text", y = 3, x = 1.25, label = "Conventional") +
+  annotate("text", y = 4, x = 1.2, label = "Conventional") +
+   annotate("text", y = 1, x = 1.6, label = "Organic") +
+  annotate("text", y = 2, x = 2.1, label = "Organic") +
+  annotate("text", y = 3, x = 1.9, label = "Organic") +
+  annotate("text", y = 4, x = 2, label = "Organic") + 
+  theme(legend.position = "none")
+  
+```
+
+# Question 7
+
+```{r}
+#Question 7
+proportions <- california |> 
+  pivot_longer(SmallAvo:XLargeAvo, names_to = "Avocado Size", values_to = "NumAvoSold") |> 
+  group_by(region, type) |> 
+  mutate(Frequency = NumAvoSold / sum(NumAvoSold))
+  
+
+ggplot(data = proportions, mapping = aes(x = region, y = Frequency, fill = `Avocado Size`)) +
+  geom_col() + 
+  facet_wrap(~type) + 
+  labs(x = "Region of CA", y = "Proportion of Mean Avocadoes Sold")
+  
+```

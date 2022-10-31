@@ -1,0 +1,51 @@
+---
+title: "Challenge 4"
+author: "Austin Liu"
+format: html
+editor: visual
+---
+
+# Data Import and Packages
+
+```{r}
+#| message: false
+library(tidyverse)
+library(here)
+library(tidyr)
+library(readxl)
+
+avocado <- read_csv(here("supporting_artifacts", 
+                         "learning_targets",
+                         "Challenge 4",
+                         "avocado.csv"))
+```
+
+```{r}
+#| message: false
+cali <- data.frame(region = c("Sacramento", "LosAngeles", "SanDiego", "SanFrancisco"))
+
+california <- semi_join(avocado, cali)
+
+house <- read_excel(here("supporting_artifacts", 
+                         "learning_targets",
+                         "Challenge 4", 
+                         "homeprice.xlsx"))
+
+
+```
+
+This data was obtained from the newhomesdirectory.com website under the historical housing market report for the years 2015-2018 in the corresponding cities. This data represents the average price sold for detached homes between 2000 and 2500 square feet.
+
+```{r}
+avohouse <- california |> 
+  left_join(house, by = c("region"=  "region", "year" = "year"))
+
+ggplot(data = avohouse, mapping = aes(x = Price, y = AveragePrice, color = region)) + 
+  geom_point() + 
+  #facet_wrap(~year) +
+  labs(title = "Boxplots of Average Home and Avocado Prices", 
+       x = "Average Home Price", 
+       y = "Average Avocado Price")
+```
+
+Argument: Some say that millennials cannot afford to buy housing because they are spending all of their money on avocado toast. Here we look at the data from average avocado and average home prices. Looking at the data, we can't say that as home prices increase, avocado prices also increase. Based on this plot, we can say that a non-linear relationship exists between the two variables. We would need further explanation and testing to be able to fully conclude with high confidence. For now, we see no linear relationship between home and avocado price.

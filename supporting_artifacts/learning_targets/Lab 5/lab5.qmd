@@ -1,0 +1,139 @@
+---
+title: "Lab 5"
+author: "Austin Liu"
+format: html
+editor: visual
+---
+
+## Data Import and Packages
+
+```{r}
+#| message: false
+library(tidyverse)
+
+
+surveys <- read_csv(here::here("supporting_artifacts", "learning_targets", 
+                               "Lab 2", "surveys.csv"))
+```
+
+# Part 1
+
+Original Side-by-side Boxplots from Lab 2
+
+```{r}
+ggplot(data = surveys, mapping = aes(y = species, x = weight)) + 
+  geom_jitter(alpha = 0.05, color = "red") +
+  geom_boxplot() +
+  labs(y = "Type of Species", x = "Weight of Species (g)")
+  
+
+```
+
+Question 1 and 2
+
+```{r}
+p1q1_2 <- surveys |> 
+  mutate(species = fct_reorder(species, weight, .desc = FALSE))
+
+ggplot(data = p1q1_2, mapping = aes(y = species, x = weight)) + 
+  geom_jitter(alpha = 0.05, color = "red") +
+  geom_boxplot() +
+  labs(y = "", x = "Weight of Species (g)", title = "Type of Species")
+```
+
+# Part 2
+
+Question 1
+
+```{r}
+ggplot(data = surveys, 
+       mapping = aes(x = year, 
+                     y = weight, 
+                     color = genus)) +
+  geom_point()
+```
+
+Question 2
+
+```{r}
+avgweight <- surveys |> 
+  group_by(genus, year) |> 
+  summarize(across(.cols = weight, mean, na.rm = TRUE), .groups = 'keep')
+
+ggplot(data = avgweight, 
+       mapping = aes(x = year, 
+                     y = weight, 
+                     color = genus)) +
+  geom_point() +
+  geom_line()
+```
+
+Question 3 and 4
+
+```{r}
+ggplot(data = avgweight, 
+       mapping = aes(x = year, 
+                     y = weight, 
+                     color = fct_reorder2(genus, year, 
+                                          weight, .desc = TRUE))) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", y = "", 
+       color = "Species", title = "Weight (g)")
+  
+  
+```
+
+# Part 3
+
+Question 1
+
+```{r}
+p3q1 <- surveys |> 
+  drop_na(day_of_week)
+ggplot(data = p3q1, mapping = aes(x = day_of_week)) +
+  geom_bar() +
+  labs(x = "Day of the Week", y = "", 
+       title = "Count of Rodents Captured by Day of the Week")
+```
+
+Question 2
+
+```{r}
+p3q2 <- surveys |> 
+  drop_na(day_of_week) |> 
+  mutate(day_of_week = fct_relevel(day_of_week, 
+                              levels = c("Mon",
+                                         "Tue",
+                                         "Wed",
+                                         "Thu",
+                                         "Fri",
+                                         "Sat",
+                                         "Sun"))
+         )
+
+ggplot(data = p3q2, mapping = aes(x = day_of_week)) +
+  geom_bar() +
+  labs(x = "Day of the Week", y = "", 
+       title = "Count of Rodents Captured by Day of the Week")
+```
+
+Question 3
+
+```{r}
+p3q3 <- surveys |> 
+  drop_na(day_of_week) |> 
+  mutate(week_end_or_day = fct_collapse(day_of_week,
+                                        weekday = c("Mon",
+                                                    "Tue",
+                                                    "Wed",
+                                                    "Thu",
+                                                    "Fri"),
+                                        weekend = c("Sat", 
+                                                    "Sun")
+                                        ))
+ggplot(data = p3q3, mapping = aes(x = week_end_or_day)) +
+  geom_bar() +
+  labs(x = "Weekday or Weekend", y = "", 
+       title = "Count of Rodents Captured on Weekday or Weekend")
+```
