@@ -1,5 +1,16 @@
 ---
 title: "Lightening Round Essays"
+author: "Austin Liu"
 format: html
 editor: visual
 ---
+
+"If John Doe doesn't earn an A, then nobody should, because: John was an exemplary student that achieved all of the learning targets, extended and revised his thinking, and contributed to a growing learning environment."
+
+The most difficult part of the class for me was stringr and forcats, those two parts of the class were the most difficult part for me because it was different from previous classes.
+
+The easiest part of the class was the linear regression at the end, because I had already had experience with this topic in a different class that used RStudio.
+
+The ungrading system surprised me the most, because it was my first time hearing about this way of giving feedback on assignments.
+
+The best advice for a new STAT 331 student would be to collaborate with your group and do the Preview Activities on time.

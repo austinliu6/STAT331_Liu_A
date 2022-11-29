@@ -1,5 +1,16 @@
 ---
 title: "My Growth as a Data Scientist"
+author: "Austin Liu"
 format: html
 editor: visual
 ---
+
+Data Science Concepts:
+
+-   Coding
+
+-   Data Visualizations
+
+-   Data Analysis
+
+As a Data scientist I grew by furthering my knowledge of R programming. I had originally come into this class with very limited experience in R programming, Python, and SAS. I feel much more comfortable in R compared to where I was before. My coding intutiton has improved
