@@ -1,0 +1,136 @@
+---
+title: "Lab 9"
+author: "Austin Liu"
+format: html
+editor: visual
+---
+
+## Data Import and Packages
+
+```{r}
+#| message: false
+library(tidyverse)
+
+names <- read_csv(here::here("supporting_artifacts", 
+                              "learning_targets",  
+                              "Lab 9", 
+                              "StateNames_A.csv"))
+```
+
+# Part 1: Summarizing and Visualizing Allisons
+
+## Question 1
+
+```{r}
+names <- names |> 
+  mutate(Sex = Gender)
+
+allisonname <- names |> 
+  select(Name, Year, State, Count, Sex) |> 
+  group_by(State, Sex) |> 
+  filter(Name == "Allison") |> 
+  summarize(Count = sum(Count), .groups = "keep") |> 
+  pivot_wider(names_from = Sex, values_from = Count) |> 
+  mutate(M = coalesce(NA, 0))
+allisonname
+  
+```
+
+## Question 2
+
+```{r}
+allisonname_F <- names |> 
+  filter(Name == "Allison", Sex == "F")
+
+```
+
+## Question 3
+
+```{r}
+allisonname_f_byYear <- allisonname_F |> 
+  group_by(Year) |> 
+  summarize(Count = sum(Count))
+
+  ggplot(data = allisonname_f_byYear, mapping = aes(x = Year, y = Count)) +
+  geom_col() +
+  labs(title = 'Popularity of the name "Allison" over time')
+
+```
+
+# Part 2: Modeling the Number of Allisons
+
+## Question 4
+
+```{r}
+Model1 <- allisonname_f_byYear |> 
+  lm(Count ~ Year, data = _)
+```
+
+## Question 5
+
+```{r}
+Model1 |> 
+  ggplot(mapping = aes(y = Count, x = Year)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+
+```
+
+## Question 6
+
+```{r}
+lm(Count ~ Year, data = allisonname_f_byYear)
+#Estimated Regression Equation: Count = 209689.8 - 101.5(Year)
+
+```
+
+## Question 7
+
+```{r}
+Model1 |> 
+  broom::augment() |> 
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
+```
+
+In the plot of the residuals against the fitted values, we do not see any discernible pattern.
+
+## Question 8
+
+Our model shows that the name Allison is declining in popularity. Allison is still quite popular as about 5000 newborn babies were given that name in our most recent year of data.
+
+# Part 3: Spelling by State
+
+## Question 1
+
+```{r}
+alan_name_M <- names |> 
+  filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen")) |> 
+  group_by(Year)
+
+  ggplot(data = alan_name_M, mapping = aes(x = Year, y = Count)) +
+  geom_col() +
+  labs(title = 'Popularity of the name "Allen, Allan, Alan" over time')
+```
+
+## Question 2
+
+```{r}
+alan_name_M |> 
+  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+  pivot_wider(names_from = Name, values_from = Count) |> 
+  select(Year, Sex, State, Alan, Allen, Allan)
+```
+
+## Question 3
+
+```{r}
+alan_name_M |> 
+  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+  group_by(State) |> 
+  mutate(Count = Count/sum(Count)) |> 
+  pivot_wider(names_from = Name, values_from = Count) |> 
+  select(Year, Sex, State, Alan, Allen, Allan)
+  
+  
+```
