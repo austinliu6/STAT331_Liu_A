@@ -13,4 +13,12 @@ Data Science Concepts:
 
 -   Data Analysis
 
-As a Data scientist I grew by furthering my knowledge of R programming. I had originally come into this class with very limited experience in R programming, Python, and SAS. I feel much more comfortable in R compared to where I was before. My coding intutiton has improved
+-   Efficiency
+
+As a Data scientist I grew by furthering my knowledge of R programming. I had originally come into this class with very limited experience in R programming, Python, and SAS. I feel much more comfortable in R compared to where I was before. I grew to like R much more than SAS, and I was also able to see similar aspects to pandas in Python. I became better at understanding a problem and visualizing in my head how to go about writing code that achieves it.
+
+Throughout this class, I have gotten experience coding different types of visualizations with ggplot and even explored new plots I had not seen before. I used a wide variety of data types and was able to be creative with the stylistic elements inside. My favorite stylistic elements that I learned were faceting and the color palettes.
+
+I grew in my ability to do analysis on data, look for patterns, and show it. I learned how to further my knowledge of regression with
+
+I also grew to understand the importance of efficiency when looking at non-repetition in code as it relates to processing time and speed. Efficiency would also relate to tidy code and easy to read and understand.

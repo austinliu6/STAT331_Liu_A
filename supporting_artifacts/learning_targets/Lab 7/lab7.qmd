@@ -1,0 +1,113 @@
+---
+title: "Lab 7"
+author: "Austin Liu"
+format: html
+editor: visual
+---
+
+# Data Import and Packages
+
+```{r}
+#| message: false
+
+library(tidyverse)
+library(here)
+
+fish <- read_csv(here("supporting_artifacts", 
+                      "learning_targets", 
+                      "Lab 7", 
+                      "BlackfootFish.csv"))
+```
+
+# Part 1
+
+## Task 1
+
+```{r}
+fish |> 
+summarize(across(.cols = everything(), .fns = ~sum(is.na(.)), na.rm = TRUE))
+
+```
+
+1796 observations have missing values. They are all present in the weight variable.
+
+## Task 2
+
+```{r}
+#| message: false
+# Visualize Missing Values
+fishgraph <- fish |> 
+  group_by(trip, year, section) |> 
+  summarize(weight = sum(is.na(weight))) |> 
+  mutate(trip = as.character(trip)) |> 
+  ggplot(mapping = aes(x = year, y = weight, fill = trip)) +
+  geom_col() +
+  labs(x = "Year",
+       y = "", 
+       title = "Frequency of Missing Weight Values between 1989 and 2006", 
+       color = "trip") +
+  facet_wrap(~section)
+fishgraph
+```
+
+# Part 2
+
+```{r}
+# Original Rescale
+BlackfootFish <- fish |> 
+  mutate(length = (length - min(length, na.rm = TRUE)) / 
+           (max(length, na.rm = TRUE) - min(length, na.rm = TRUE)), 
+         weight = (weight - min(weight, na.rm = TRUE)) / 
+           (max(weight, na.rm = TRUE) - min(weight, na.rm = TRUE))
+         )
+```
+
+## Task 1, 2, 3
+
+```{r}
+#Rescale numeric values between 0 and 1
+rescale_01 <- function(vect){
+  stopifnot(is.numeric(vect), length(vect) >= 1)
+  minvect <- min(vect, na.rm = TRUE)
+  maxvect <- max(vect, na.rm = TRUE)
+  return((vect - minvect) / (maxvect - minvect))
+  
+} 
+
+x <- c(1:25, NA)
+rescale_01(x)
+```
+
+## Task 4
+
+```{r}
+#| layout-nrow: 1
+# Side-by-Side histograms to show the data is the same distribution, different scale
+fishgraph2 <- data.frame(length = c(rescale_01(fish$length)))
+
+ggplot(data = fish, mapping = aes(x = length)) +
+  geom_histogram(binwidth = 10)
+
+ggplot(data = fishgraph2, mapping = aes(x = length)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+## Task 5 & 6
+
+```{r}
+# Perform Rescale on a Column
+rescale_column <- function(df, varname){
+  stopifnot(is.data.frame(df))
+  
+  df |> 
+    mutate( 
+      across(
+      .cols = {{ varname }}, 
+      .fns = rescale_01
+      )
+    )
+}
+
+fish |> 
+  rescale_column(c(length, weight))
+```
