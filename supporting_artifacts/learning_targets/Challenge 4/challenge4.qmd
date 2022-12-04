@@ -41,9 +41,9 @@ avohouse <- california |>
   left_join(house, by = c("region"=  "region", "year" = "year"))
 
 ggplot(data = avohouse, mapping = aes(x = Price, y = AveragePrice, color = region)) + 
-  geom_point() + 
   #facet_wrap(~year) +
-  labs(title = "Boxplots of Average Home and Avocado Prices", 
+  geom_jitter(alpha = 0.5)+
+  labs(title = "Datapoint Distribution of Average Home and Avocado Prices", 
        x = "Average Home Price", 
        y = "Average Avocado Price")
 ```

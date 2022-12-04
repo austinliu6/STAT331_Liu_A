@@ -36,7 +36,7 @@ allisonname <- names |>
   filter(Name == "Allison") |> 
   summarize(Count = sum(Count), .groups = "keep") |> 
   pivot_wider(names_from = Sex, values_from = Count) |> 
-  mutate(M = coalesce(NA, 0))
+  mutate(M = coalesce(M, 0))
 
 knitr::kable(allisonname[, 1:3], 
              col.names = c("State", 
@@ -61,7 +61,8 @@ allisonname_f_byYear <- allisonname_F |>
   summarize(Count = sum(Count))
 
   ggplot(data = allisonname_f_byYear, mapping = aes(x = Year, y = Count)) +
-  geom_col() +
+  geom_point() +
+    geom_line() +
   labs(title = 'Popularity of the name "Allison" over time')
 
 ```
@@ -89,9 +90,10 @@ Model1 |>
 
 ```{r}
 lm(Count ~ Year, data = allisonname_f_byYear)
-#Estimated Regression Equation: Count = 209689.8 - 101.5(Year)
 
 ```
+
+y-hat (estimated Count of Allisons) = 209,689.8 - 101.5 (Year)
 
 ## Question 7
 
@@ -113,25 +115,29 @@ Our model shows that the name Allison is declining in popularity. Allison is sti
 ## Question 1
 
 ```{r}
-alan_name_M <- names |> 
+#| message: false
+names |> 
   filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen")) |> 
-  group_by(Year)
-
-  ggplot(data = alan_name_M, mapping = aes(x = Year, y = Count)) +
-  geom_col() +
+  group_by(Year, Name) |> 
+  summarize(Count = sum(Count)) |> 
+  ggplot(mapping = aes(x = Year, y = Count, color = Name)) +
+    geom_point() +
+    geom_line() +
   labs(title = 'Popularity of the name "Allen, Allan, Alan" over time')
 ```
 
 ## Question 2
 
 ```{r}
-alannametotal <- alan_name_M |> 
-  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+alan_name_M <- names |> 
+  filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen"),
+         Year == 2000, State %in% c("PA", "CA")) |> 
   pivot_wider(names_from = Name, values_from = Count) |> 
-  select(Year, Sex, State, Alan, Allen, Allan)
+  select(State, Alan, Allen, Allan)
+alan_name_M
 
-knitr::kable(alannametotal[, 1:6], 
-             col.names = c("Year", "Sex", "State",
+knitr::kable(alan_name_M[, 1:4], 
+             col.names = c("State",
                            "Count of Alan", 
                            "Count of Allen", 
                            "Count of Allan"),
@@ -141,18 +147,20 @@ knitr::kable(alannametotal[, 1:6],
 ## Question 3
 
 ```{r}
-alannamepercent <- alan_name_M |> 
-  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+alan_name_M_per <- names |> 
+  filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen"),
+         Year == 2000, State %in% c("PA", "CA")) |> 
   group_by(State) |> 
   mutate(Count = Count/sum(Count)) |> 
   pivot_wider(names_from = Name, values_from = Count) |> 
-  select(Year, Sex, State, Alan, Allen, Allan)
+  select(State, Alan, Allen, Allan)
+alan_name_M_per
   
-knitr::kable(alannamepercent[, 1:6], 
-             col.names = c("Year", "Sex", "State", 
-                           "Count of Alan", 
-                           "Count of Allen", 
-                           "Count of Allan") , 
+knitr::kable(alan_name_M_per[, 1:4], 
+             col.names = c("State", 
+                           "Percent by State named Alan", 
+                           "Percent by State named Allen", 
+                           "Percent by State named Allan") , 
              "html") %>%
   kableExtra::kable_styling(latex_options = "striped", font_size = 13)%>%
   kableExtra::row_spec(1:2, color = 'white', background = 'black')

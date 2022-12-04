@@ -31,7 +31,7 @@ allisonname <- names |>
   filter(Name == "Allison") |> 
   summarize(Count = sum(Count), .groups = "keep") |> 
   pivot_wider(names_from = Sex, values_from = Count) |> 
-  mutate(M = coalesce(NA, 0))
+  mutate(M = coalesce(M, 0))
 allisonname
   
 ```
@@ -52,7 +52,8 @@ allisonname_f_byYear <- allisonname_F |>
   summarize(Count = sum(Count))
 
   ggplot(data = allisonname_f_byYear, mapping = aes(x = Year, y = Count)) +
-  geom_col() +
+    geom_point() +
+    geom_line() +
   labs(title = 'Popularity of the name "Allison" over time')
 
 ```
@@ -80,9 +81,9 @@ Model1 |>
 
 ```{r}
 lm(Count ~ Year, data = allisonname_f_byYear)
-#Estimated Regression Equation: Count = 209689.8 - 101.5(Year)
-
 ```
+
+y-hat (estimated Count of Allisons) = 209,689.8 - 101.5 (Year)
 
 ## Question 7
 
@@ -104,33 +105,40 @@ Our model shows that the name Allison is declining in popularity. Allison is sti
 ## Question 1
 
 ```{r}
-alan_name_M <- names |> 
+#| message: FALSE
+names |> 
   filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen")) |> 
-  group_by(Year)
-
-  ggplot(data = alan_name_M, mapping = aes(x = Year, y = Count)) +
-  geom_col() +
+  group_by(Year, Name) |> 
+  summarize(Count = sum(Count)) |> 
+  ggplot(mapping = aes(x = Year, y = Count, color = Name)) +
+    geom_point() +
+    geom_line() +
   labs(title = 'Popularity of the name "Allen, Allan, Alan" over time')
 ```
 
 ## Question 2
 
 ```{r}
-alan_name_M |> 
-  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+alan_name_M <- names |> 
+  filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen"),
+         Year == 2000, State %in% c("PA", "CA")) |> 
   pivot_wider(names_from = Name, values_from = Count) |> 
-  select(Year, Sex, State, Alan, Allen, Allan)
+  select(State, Alan, Allen, Allan)
+alan_name_M
 ```
 
 ## Question 3
 
 ```{r}
-alan_name_M |> 
-  filter(Year == 2000, State %in% c("PA", "CA")) |> 
+alan_name_M_per <- names |> 
+  filter(Sex == "M", Name %in% c("Allan", "Alan", "Allen"),
+         Year == 2000, State %in% c("PA", "CA")) |> 
   group_by(State) |> 
   mutate(Count = Count/sum(Count)) |> 
   pivot_wider(names_from = Name, values_from = Count) |> 
-  select(Year, Sex, State, Alan, Allen, Allan)
+  select(State, Alan, Allen, Allan)
+alan_name_M_per
+  
   
   
 ```
